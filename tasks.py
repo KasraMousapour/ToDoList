@@ -17,3 +17,8 @@ class Task:
             self.status = status
             Task.names_list.append(name)
             count += 1
+
+    def change_status(self, new_status:Literal["done" , "doing"]):
+        self.status = new_status
+        print("successfully status changed.")
+                
