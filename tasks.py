@@ -70,14 +70,32 @@ class Task:
                 print("the deadline format must be YYYY-MM-DD")
 
 
-    def update_status(self, new_status:Literal["done" , "doing"]):
-        self.status = new_status
-        print("successfully status changed.")
-
     def update_name(self, new_name):
         self.name(new_name)
+        return f"The name updated to {new_name}"
+
+    def update_description(self, new_description):
+        self.name(new_description)
+        return f"The description updated to {new_description}"
+
+    def update_status(self, new_status:Literal["done" , "doing"]):
+        self.status(new_status)
+        return f"The status updated to {new_status}"
+
+    def update_deadline(self, new_deadline):
+        self.deadline(new_deadline)
+        return f"The deadline updated to {new_deadline}"
     
+    def delete_task(self):
+        try:
+            del self
+            return "seccessfully deleted"
+        except:
+            return "something is wrong"
+
         
+
+
 
         
 
