@@ -35,13 +35,14 @@ class Project:
             self._description = description
 
     def update_name(self,new_name:str):
-        if new_name in Project.names_list:
-            raise ValueError("The new name is used")
-        elif len(new_name.split()) > 50:
-            raise ValueError("The new name must be at least 50 words")
-        else:
-            self.name = new_name
-            print("The name successfully updated.")
+        self.name(new_name)
+        print("The name successfully updated.")
+
+    def update_description(self, new_description:str):
+        self.description(new_description)
+        print("The description successfully updated.")
+
+
       
 
 
