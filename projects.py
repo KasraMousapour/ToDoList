@@ -49,7 +49,7 @@ class Project:
 
     def add_task(self, new_task:Task):
         try:
-            self.tasks().append(new_task)  
+            self.tasks.append(new_task)  
         except:
             print("can't add")             
 
@@ -61,9 +61,19 @@ class Project:
         self.description(new_description)
         print("The description successfully updated.")
 
+    def show_tasks(self):
+        if self.tasks:
+            for task in self.tasks:
+                print(f"name:{task.name}, description:{task.description}, status:{task.status}, deadline:{task.deadline}")
+        else:
+            print("no task")        
+
+
     def delete_project(self):
         del self
-        return "successfully deleted"    
+        return "successfully deleted" 
+
+       
 
 
 
