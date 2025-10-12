@@ -1,6 +1,11 @@
+from tasks import Task
+from collections.abc import Sequence
 class Project:
     names_list = []
     count = 0
+    _name:str
+    _description:str
+    _tasks:Sequence[Task]
     def __init__(self,name:str,description:str):
         if Project.count > MAX_NUMBER_OF_PROJECT:
             raise ValueError("The number of projects is full")
@@ -18,6 +23,10 @@ class Project:
     def description(self):
         return self._description
     
+    @property
+    def tasks(self):
+        return self._tasks
+    
     @name.setter
     def name(self, name:str):
         if name in Project.names_list:
@@ -34,6 +43,16 @@ class Project:
         else:
             self._description = description
 
+    @tasks.setter
+    def tasks(self, tasks:Sequence[Task]):
+        self._tasks = tasks
+
+    def add_task(self, new_task:Task):
+        try:
+            self.tasks().append(new_task)  
+        except:
+            print("can't add")             
+
     def update_name(self,new_name:str):
         self.name(new_name)
         print("The name successfully updated.")
@@ -41,6 +60,12 @@ class Project:
     def update_description(self, new_description:str):
         self.description(new_description)
         print("The description successfully updated.")
+
+    def delete_project(self):
+        del self
+        return "successfully deleted"    
+
+
 
 
       
