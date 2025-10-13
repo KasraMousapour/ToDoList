@@ -1,19 +1,35 @@
 from tasks import Task
 from collections.abc import Sequence
+from dotenv import load_dotenv
+import os
+
+# load_dotenv("example.env")
+
 class Project:
     names_list = []
     count = 0
     _name:str
     _description:str
     _tasks:Sequence[Task]
-    def __init__(self,name:str,description:str):
-        if Project.count > MAX_NUMBER_OF_PROJECT:
+    # max_number = os.getenv("MAX_NUMBER_OF_PROJECT")
+    MAX_NUMBER_OF_PROJECT = 100
+    def __init__(self,name:str,description:str,tasks:Sequence[Task]=[]):
+        if Project.count > Project.MAX_NUMBER_OF_PROJECT:
             raise ValueError("The number of projects is full")
+        elif name in Project.names_list:
+            raise ValueError("The name is used")
+        elif len(name.split()) > 50:
+            raise ValueError("The name must be at least 50 words")
+        elif len(description.split()) > 150:
+            raise ValueError("The description must be at least 150 words")
         else:
-            self.name(name)
-            self.description(description)
+            self._name = name
+            self._description = description
+            self._tasks = tasks
             Project.names_list.append(name)
-            count += 1
+            Project.count += 1
+
+    
 
     @property
     def name(self):
@@ -29,7 +45,9 @@ class Project:
     
     @name.setter
     def name(self, name:str):
-        if name in Project.names_list:
+        if not name:
+            raise ValueError("Name cannot be empty.")
+        elif name in Project.names_list:
             raise ValueError("The name is used")
         elif len(name.split()) > 50:
             raise ValueError("The name must be at least 50 words")
@@ -54,7 +72,7 @@ class Project:
             print("can't add")             
 
     def update_name(self,new_name:str):
-        self.name(new_name)
+        self.name = new_name
         print("The name successfully updated.")
 
     def update_description(self, new_description:str):
@@ -67,7 +85,6 @@ class Project:
                 print(f"name:{task.name}, description:{task.description}, status:{task.status}, deadline:{task.deadline}")
         else:
             print("no task")        
-
 
     def delete_project(self):
         del self
