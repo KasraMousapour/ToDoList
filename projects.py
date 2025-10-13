@@ -13,7 +13,7 @@ class Project:
     _tasks:Sequence[Task]
     # max_number = os.getenv("MAX_NUMBER_OF_PROJECT")
     MAX_NUMBER_OF_PROJECT = 100
-    def __init__(self,name:str,description:str,tasks:Sequence[Task]=[]):
+    def __init__(self,name:str,description:str="",tasks:Sequence[Task]=[]):
         if Project.count > Project.MAX_NUMBER_OF_PROJECT:
             raise ValueError("The number of projects is full")
         elif name in Project.names_list:
@@ -73,7 +73,6 @@ class Project:
 
     def update_name(self,new_name:str):
         self.name = new_name
-        print("The name successfully updated.")
 
     def update_description(self, new_description:str):
         self.description(new_description)
@@ -84,11 +83,8 @@ class Project:
             for task in self.tasks:
                 print(f"name:{task.name}, description:{task.description}, status:{task.status}, deadline:{task.deadline}")
         else:
-            print("no task")        
+            print("No task yet.")        
 
-    def delete_project(self):
-        del self
-        return "successfully deleted" 
 
        
 
