@@ -71,13 +71,6 @@ class Project:
         except:
             print("can't add")             
 
-    def update_name(self,new_name:str):
-        self.name = new_name
-
-    def update_description(self, new_description:str):
-        self.description(new_description)
-        print("The description successfully updated.")
-
     def show_tasks(self):
         if self.tasks:
             for task in self.tasks:
@@ -85,6 +78,11 @@ class Project:
         else:
             print("No task yet.")        
 
+    def find_task(self, name):
+        for task in self.tasks:
+            if task.name == name:
+                return task
+        return None
 
        
 

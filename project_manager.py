@@ -22,10 +22,26 @@ class ProjectManager:
     def rename_project(self, old_name, new_name):
         project = self.find_project(old_name)
         if project:
-            project.update_name(new_name)
-            print(f"Project renamed to '{new_name}'.")
+            try:
+                project.name = new_name
+                print(f"Project renamed to '{new_name}'.")
+            except ValueError as e:
+                print(e)    
         else:
             print("Project not found.")
+
+    def change_description(self, name, new_description):
+        project = self.find_project(name)
+        if project:
+            try:
+                project.description = new_description
+                print(f"Project description changed.")
+            except ValueError as e:
+                print(e)    
+        else:
+            print("Project not found.")
+        
+
 
     def add_task_to_project(self, project_name, task:Task):
         project = self.find_project(project_name)

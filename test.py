@@ -5,7 +5,14 @@ p1 = Project("portfolio","lorem ipsome")
 p1.update_name("web design") 
 t1 = Task("html","","done","1955-11-05")
 t2 = Task("css","styling", "todo", "2025-12-04")
-p1.add_task(t1)
-p1.add_task(t2)
-p1.show_tasks()
-print(p1.delete_project())
+# p1.add_task(t1)
+# p1.add_task(t2)
+# print(p1.delete_project())
+temp = 0
+try:
+    t1.name = ""
+except ValueError as e:
+    print(e)
+else:
+    temp = 1       
+print(temp)    
