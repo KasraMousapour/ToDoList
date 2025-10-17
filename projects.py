@@ -29,6 +29,11 @@ class Project:
             Project.names_list.append(name)
             Project.count += 1
 
+    def delete_project(self):
+        Project.count -= 1  
+        del self
+        print("successfully deleted!!")      
+
     
 
     @property

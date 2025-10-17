@@ -15,7 +15,7 @@ class Task:
     # max_number = os.getenv("MAX_NUMBER_OF_TASK")
     MAX_NUMBER_OF_TASK = 50
 
-    def __init__(self,name:str,description:str,status:Literal["done" ,"doing" ,"todo"]="todo",deadline:str=""):
+    def __init__(self,name:str,description:str="",status:Literal["done" ,"doing" ,"todo"]="todo",deadline:str=""):
         if Task.count > Task.MAX_NUMBER_OF_TASK:
             raise ValueError("The number of tasks is full")
         elif name in Task.names_list:
@@ -36,6 +36,11 @@ class Task:
         self._deadline = deadline
         Task.names_list.append(name)
         Task.count += 1
+
+    def delete_task(self):
+        Task.count -= 1
+        del self
+        print("successfully deleted!!")    
 
     @property
     def name(self):

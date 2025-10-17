@@ -62,7 +62,7 @@ class ProjectManager:
         project = self.find_project(name)
         if project:
             self.projects.remove(project)
-            del project
-            print("successfully deleted")
+            project.delete_project()
+
         else:
             print("project doesn't exist.")    

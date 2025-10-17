@@ -37,120 +37,123 @@ def main():
         elif choice == "5":
             name = input("Enter project name: ")
             project = manager.find_project(name)
-            while True:
-                print(f"task management of {name} project:")
-                print("1. Add task ")
-                print("2. rename task ")
-                print("3. change task description ")
-                print("4. change task status ")
-                print("5. delete task ")
-                print("6. show all tasks of project ")
-                print("7. back ")
 
-                choice2 = input("Choose an option: ")
+            if project:
+                while True:
+                    print(f"task management of {name} project:")
+                    print("1. Add task ")
+                    print("2. rename task ")
+                    print("3. change task description ")
+                    print("4. change task status ")
+                    print("5. delete task ")
+                    print("6. show all tasks of project ")
+                    print("7. back ")
 
-                if choice2 == "1":
-                    task = Task()
-                    temp = 1
-                    while temp == 1 :
+                    choice2 = input("Choose an option: ")
+
+                    if choice2 == "1":
+                        temp = 1
+                        while temp == 1 :
+                            name = input("Enter task name: ")
+                            try:
+                                task = Task(name)
+                            except ValueError as e:
+                                print(e)
+                            else:
+                                temp = 0    
+                        temp = 1
+                        while temp == 1 :
+                            description = input("Enter task description: ")
+                            try:
+                                task.description = description
+                            except ValueError as e:
+                                print(e)
+                            else:
+                                temp = 0 
+                        temp = 1
+                        while temp == 1 :
+                            deadline = input("Enter task deadline(YYYY-MM-DD): ")
+                            try:
+                                task.deadline = deadline
+                            except ValueError as e:
+                                print(e)
+                            else:
+                                temp = 0 
+                        project.add_task(task) 
+                        print("The task successfully added. ")      
+
+                    elif choice2 == "2":
                         name = input("Enter task name: ")
-                        try:
-                            task.name = name
-                        except ValueError as e:
-                            print(e)
-                        else:
-                            temp = 0    
-                    temp = 1
-                    while temp == 1 :
-                        description = input("Enter task description: ")
-                        try:
-                            task.description = description
-                        except ValueError as e:
-                            print(e)
-                        else:
-                            temp = 0 
-                    temp = 1
-                    while temp == 1 :
-                        deadline = input("Enter task deadline(YYYY-MM-DD): ")
-                        try:
-                            task.deadline = deadline
-                        except ValueError as e:
-                            print(e)
-                        else:
-                            temp = 0 
-                    project.add_task(task) 
-                    print("The task successfully added. ")      
-
-                elif choice2 == "2":
-                    name = input("Enter task name: ")
-                    task = project.find_task(name)     
-                    if task:
-                        temp = 1
-                        while temp == 1 :
-                            new_name = input("Enter new name: ")
-                            try:
-                                task.name = new_name
-                            except ValueError as e:
-                                print(e)
-                            else:
-                                temp = 0  
-                        print("The task successfully renamed. ")  
-                    else:
-                        print("task not found!")     
-
-                elif choice2 == "3":
-                    name = input("Enter task name: ")
-                    task = project.find_task(name)     
-                    if task:
-                        temp = 1
-                        while temp == 1 :
-                            new_description = input("Enter new description: ")
-                            try:
-                                task.description = new_description
-                            except ValueError as e:
-                                print(e)
-                            else:
-                                temp = 0  
-                        print("The task description successfully changed. ")  
-                    else:
-                        print("task not found!") 
-
-                elif choice2 == "4":
-                    name = input("Enter task name: ")
-                    task = project.find_task(name)     
-                    if task:
-                        temp = 1
-                        while temp == 1 :
-                            new_status = input("Enter new status(1: doing , 2: done): ")
-                            try:
-                                if new_status == "1":
-                                    task.status = "doing"
-                                elif new_status == "2":
-                                    task.status = "done"
+                        task = project.find_task(name)     
+                        if task:
+                            temp = 1
+                            while temp == 1 :
+                                new_name = input("Enter new name: ")
+                                try:
+                                    task.name = new_name
+                                except ValueError as e:
+                                    print(e)
                                 else:
-                                    raise ValueError("Please enter between 1 or 2.")        
+                                    temp = 0  
+                            print("The task successfully renamed. ")  
+                        else:
+                            print("task not found!")     
 
-                            except ValueError as e:
-                                print(e)
-                            else:
-                                temp = 0  
-                        print("The task status successfully changed. ")  
-                    else:
-                        print("task not found!") 
+                    elif choice2 == "3":
+                        name = input("Enter task name: ")
+                        task = project.find_task(name)     
+                        if task:
+                            temp = 1
+                            while temp == 1 :
+                                new_description = input("Enter new description: ")
+                                try:
+                                    task.description = new_description
+                                except ValueError as e:
+                                    print(e)
+                                else:
+                                    temp = 0  
+                            print("The task description successfully changed. ")  
+                        else:
+                            print("task not found!") 
 
-                elif choice2 == "5":
-                    name = input("Enter task name: ")
-                    task = project.find_task(name) 
-                    if task:
-                        del task
-                    else:
-                        print("task not found!")
+                    elif choice2 == "4":
+                        name = input("Enter task name: ")
+                        task = project.find_task(name)     
+                        if task:
+                            temp = 1
+                            while temp == 1 :
+                                new_status = input("Enter new status(1: doing , 2: done): ")
+                                try:
+                                    if new_status == "1":
+                                        task.status = "doing"
+                                    elif new_status == "2":
+                                        task.status = "done"
+                                    else:
+                                        raise ValueError("Please enter between 1 or 2.")        
 
-                elif choice2 == "6":
-                    project.show_tasks()
+                                except ValueError as e:
+                                    print(e)
+                                else:
+                                    temp = 0  
+                            print("The task status successfully changed. ")  
+                        else:
+                            print("task not found!") 
 
-                elif choice2 == "7":
-                    break        
+                    elif choice2 == "5":
+                        name = input("Enter task name: ")
+                        task = project.find_task(name) 
+                        if task:
+                            task.delete_task()
+                        else:
+                            print("task not found!")
+
+                    elif choice2 == "6":
+                        project.show_tasks()
+
+                    elif choice2 == "7":
+                        break   
+            else:
+                print("Invalid value!")             
 
         elif choice == "6":
             manager.show_projects()
