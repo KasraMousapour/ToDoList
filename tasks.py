@@ -92,7 +92,6 @@ class Task:
             except ValueError:
                 print("the deadline format must be YYYY-MM-DD")
 
-
     def update_name(self, new_name):
         self.name(new_name)
         return f"The name updated to {new_name}"

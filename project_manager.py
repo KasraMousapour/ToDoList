@@ -41,8 +41,6 @@ class ProjectManager:
         else:
             print("Project not found.")
         
-
-
     def add_task_to_project(self, project_name, task:Task):
         project = self.find_project(project_name)
         if project:
