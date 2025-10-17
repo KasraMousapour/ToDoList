@@ -88,6 +88,15 @@ class Project:
             if task.name == name:
                 return task
         return None
+    
+    def delete_task(self, name):
+        for task in self.tasks:
+            if task.name == name:
+                self.tasks.remove(task)
+                Task.count -= 1
+                print(f"Task '{name}' successfully deleted!")
+                return
+        print(f"Task '{name}' not found.")
 
        
 

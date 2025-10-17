@@ -141,11 +141,7 @@ def main():
 
                     elif choice2 == "5":
                         name = input("Enter task name: ")
-                        task = project.find_task(name) 
-                        if task:
-                            task.delete_task()
-                        else:
-                            print("task not found!")
+                        project.delete_task(name)
 
                     elif choice2 == "6":
                         project.show_tasks()
