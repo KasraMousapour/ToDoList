@@ -35,7 +35,6 @@ class Project:
         print("successfully deleted!!")      
 
     
-
     @property
     def name(self):
         return self._name   
