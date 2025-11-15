@@ -1,4 +1,4 @@
-from tasks import Task
+from app.services.tasks import Task
 from collections.abc import Sequence
 from dotenv import load_dotenv
 import os

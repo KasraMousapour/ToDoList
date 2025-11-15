@@ -1,6 +1,6 @@
 from project_manager import ProjectManager
-from projects import Project
-from tasks import Task
+from app.services.projects import Project
+from app.services.tasks import Task
 
 def main():
     manager = ProjectManager()
