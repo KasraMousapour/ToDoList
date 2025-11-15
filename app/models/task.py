@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 from db.base import Base
 
@@ -19,4 +19,8 @@ class Task(Base):
 
     project_id = Column(Integer, ForeignKey("projects.id"))
     project = relationship("Project", back_populates="tasks")
+
+    __table_args__ = (
+        UniqueConstraint("project_id", "name", name="uq_task_project_name"),
+    )
 
