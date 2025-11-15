@@ -1,7 +1,10 @@
 from sqlalchemy.orm import Session
 from repositories.project_repository import ProjectRepository
 from repositories.task_repository import TaskRepository
-from exceptions.service_exceptions import ValidationError, DuplicateNameError
+from exceptions.service_exceptions import ValidationError, DuplicateNameError, LimitExceededError
+import os
+
+MAX_PROJECTS = int(os.getenv("MAX_PROJECTS", 100))
 
 class ProjectService:
     def __init__(self, db: Session):
@@ -17,6 +20,9 @@ class ProjectService:
         existing = self.project_repo.list()
         if any(p.name == name for p in existing):
             raise DuplicateNameError("Project name must be unique")
+        
+        if len(existing) >= MAX_PROJECTS:
+            raise LimitExceededError(f"Cannot create more than {MAX_PROJECTS} projects")
 
         return self.project_repo.create(name=name, description=description)
 

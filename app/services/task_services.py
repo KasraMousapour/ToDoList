@@ -2,7 +2,10 @@ from sqlalchemy.orm import Session
 from repositories.task_repository import TaskRepository
 from models.task import TaskStatus
 from datetime import datetime
-from exceptions.service_exceptions import ValidationError, LimitExceededError, DeadlineError
+from exceptions.service_exceptions import ValidationError, LimitExceededError, DeadlineError, DuplicateNameError
+import os
+
+MAX_TASKS_PER_PROJECT = int(os.getenv("MAX_TASKS_PER_PROJECT", 100))
 
 class TaskService:
     def __init__(self, db: Session):
@@ -20,19 +23,37 @@ class TaskService:
                 raise DeadlineError("The deadline format must be YYYY-MM-DD")
             if deadline <= datetime.now():
                 raise DeadlineError("Deadline must be in the future")
-
+            
+        tasks = self.task_repo.list_by_project(project_id)
+        if any(t.name == name for t in tasks):
+            raise DuplicateNameError("task name must be unique")
+        
+        if len(tasks) >= MAX_TASKS_PER_PROJECT:
+            raise LimitExceededError(f"Cannot create more than {MAX_TASKS_PER_PROJECT} tasks in a project")    
 
         return self.task_repo.create(project_id, name, description, status, deadline)
 
     def update_task(self, task_id: int, **kwargs):
-        if "name" in kwargs and len(kwargs["name"]) < 50:
-            raise ValidationError("Task name must be at least 50 characters long")
+        task = self.task_repo.get(task_id)
+        if not task:
+            return None
+
+        if "name" in kwargs:
+            if len(kwargs["name"]) < 30:
+                raise ValidationError("Task name must be at least 30 characters long")
+
+            # Unique name check within the same project
+            tasks = self.task_repo.list_by_project(task.project_id)
+            if any(t.name == kwargs["name"] and t.id != task_id for t in tasks):
+                raise DuplicateNameError("Task name must be unique within the project")
+
         if "description" in kwargs and len(kwargs["description"]) < 150:
             raise ValidationError("Task description must be at least 150 characters long")
+
         if "deadline" in kwargs:
             deadline = kwargs["deadline"]
             if not isinstance(deadline, datetime):
-                raise DeadlineError("Deadline must be a valid datetime object")
+                raise DeadlineError("The deadline format must be YYYY-MM-DD")
             if deadline <= datetime.now():
                 raise DeadlineError("Deadline must be in the future")
 
