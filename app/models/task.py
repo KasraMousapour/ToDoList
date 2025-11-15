@@ -16,6 +16,7 @@ class Task(Base):
     description = Column(String)
     status = Column(Enum(TaskStatus), default=TaskStatus.todo, nullable=False)
     deadline = Column(DateTime)
+    closed_at = Column(DateTime, nullable=True)
 
     project_id = Column(Integer, ForeignKey("projects.id"))
     project = relationship("Project", back_populates="tasks")
