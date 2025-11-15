@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from repositories.project_repository import ProjectRepository
 from repositories.task_repository import TaskRepository
-from exceptions.service_exceptions import ValidationError, DuplicateNameError, LimitExceededError
+from exceptions.service_exceptions import ValidationError, LimitExceededError
 import os
 
 MAX_PROJECTS = int(os.getenv("MAX_PROJECTS", 100))
@@ -17,10 +17,7 @@ class ProjectService:
         if description and len(description) < 150:
             raise ValidationError("Project description must be at least 150 characters long")
 
-        existing = self.project_repo.list()
-        if any(p.name == name for p in existing):
-            raise DuplicateNameError("Project name must be unique")
-        
+        existing = self.project_repo.list()        
         if len(existing) >= MAX_PROJECTS:
             raise LimitExceededError(f"Cannot create more than {MAX_PROJECTS} projects")
 
@@ -31,11 +28,6 @@ class ProjectService:
             raise ValidationError("Project name must be at least 50 characters long")
         if "description" in kwargs and len(kwargs["description"]) < 150:
             raise ValidationError("Project description must be at least 150 characters long")
-
-        if "name" in kwargs:
-            existing = self.project_repo.list()
-            if any(p.name == kwargs["name"] and p.id != project_id for p in existing):
-                raise DuplicateNameError("Project name must be unique")
 
         return self.project_repo.update(project_id, **kwargs)
 

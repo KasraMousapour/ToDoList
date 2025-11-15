@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from repositories.task_repository import TaskRepository
 from models.task import TaskStatus
 from datetime import datetime
-from exceptions.service_exceptions import ValidationError, LimitExceededError, DeadlineError, DuplicateNameError
+from exceptions.service_exceptions import ValidationError, LimitExceededError, DeadlineError
 import os
 
 MAX_TASKS_PER_PROJECT = int(os.getenv("MAX_TASKS_PER_PROJECT", 100))
@@ -25,9 +25,6 @@ class TaskService:
                 raise DeadlineError("Deadline must be in the future")
             
         tasks = self.task_repo.list_by_project(project_id)
-        if any(t.name == name for t in tasks):
-            raise DuplicateNameError("task name must be unique")
-        
         if len(tasks) >= MAX_TASKS_PER_PROJECT:
             raise LimitExceededError(f"Cannot create more than {MAX_TASKS_PER_PROJECT} tasks in a project")    
 
@@ -41,11 +38,6 @@ class TaskService:
         if "name" in kwargs:
             if len(kwargs["name"]) < 30:
                 raise ValidationError("Task name must be at least 30 characters long")
-
-            # Unique name check within the same project
-            tasks = self.task_repo.list_by_project(task.project_id)
-            if any(t.name == kwargs["name"] and t.id != task_id for t in tasks):
-                raise DuplicateNameError("Task name must be unique within the project")
 
         if "description" in kwargs and len(kwargs["description"]) < 150:
             raise ValidationError("Task description must be at least 150 characters long")
