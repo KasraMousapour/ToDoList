@@ -13,10 +13,10 @@ class TaskService:
 
     def create_task(self, project_id: int, name: str, description: str = None,
                     status: TaskStatus = TaskStatus.todo, deadline=None):
-        if len(name) < 30:
-            raise ValidationError("Task name must be at least 30 characters long")
-        if description and len(description) < 150:
-            raise ValidationError("Task description must be at least 150 characters long")
+        if len(name) > 30:
+            raise ValidationError("Task name must be at the most 30 characters long")
+        if description and len(description) > 150:
+            raise ValidationError("Task description must be at the most 150 characters long")
 
         if deadline:
             if not isinstance(deadline, datetime):
@@ -36,11 +36,11 @@ class TaskService:
             return None
 
         if "name" in kwargs:
-            if len(kwargs["name"]) < 30:
-                raise ValidationError("Task name must be at least 30 characters long")
+            if len(kwargs["name"]) > 30:
+                raise ValidationError("Task name must be at the most 30 characters long")
 
-        if "description" in kwargs and len(kwargs["description"]) < 150:
-            raise ValidationError("Task description must be at least 150 characters long")
+        if "description" in kwargs and len(kwargs["description"]) > 150:
+            raise ValidationError("Task description must be at the most 150 characters long")
 
         if "deadline" in kwargs:
             deadline = kwargs["deadline"]

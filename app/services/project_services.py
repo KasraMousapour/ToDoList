@@ -12,10 +12,10 @@ class ProjectService:
         self.task_repo = TaskRepository(db)
 
     def create_project(self, name: str, description: str = None):
-        if len(name) < 50:
-            raise ValidationError("Project name must be at least 50 characters long")
-        if description and len(description) < 150:
-            raise ValidationError("Project description must be at least 150 characters long")
+        if len(name) > 50:
+            raise ValidationError("Project name must be at the most 50 characters long")
+        if description and len(description) > 150:
+            raise ValidationError("Project description must be at the most 150 characters long")
 
         existing = self.project_repo.list()        
         if len(existing) >= MAX_PROJECTS:
@@ -24,10 +24,10 @@ class ProjectService:
         return self.project_repo.create(name=name, description=description)
 
     def update_project(self, project_id: int, **kwargs):
-        if "name" in kwargs and len(kwargs["name"]) < 50:
-            raise ValidationError("Project name must be at least 50 characters long")
-        if "description" in kwargs and len(kwargs["description"]) < 150:
-            raise ValidationError("Project description must be at least 150 characters long")
+        if "name" in kwargs and len(kwargs["name"]) > 50:
+            raise ValidationError("Project name must be at the most 50 characters long")
+        if "description" in kwargs and len(kwargs["description"]) > 150:
+            raise ValidationError("Project description must be at the most 150 characters long")
 
         return self.project_repo.update(project_id, **kwargs)
 
