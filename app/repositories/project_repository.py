@@ -19,14 +19,14 @@ class ProjectRepository:
             # Translate DB-level error into custom exception
             raise DuplicateNameError("Project name must be unique") from e
 
-    def get(self, project_id: int) -> Project | None:
+    def get_by_id(self, project_id: int) -> Project | None:
         return self.db.query(Project).filter(Project.id == project_id).first()
 
     def list(self) -> list[Project]:
         return self.db.query(Project).all()
 
     def update(self, project_id: int, **kwargs) -> Project | None:
-        project = self.get(project_id)
+        project = self.get_by_id(project_id)
         if not project:
             return None
         for key, value in kwargs.items():
@@ -40,7 +40,7 @@ class ProjectRepository:
             raise DuplicateNameError("Project name must be unique") from e
 
     def delete(self, project_id: int) -> bool:
-        project = self.get(project_id)
+        project = self.get_by_id(project_id)
         if not project:
             return False
         self.db.delete(project)

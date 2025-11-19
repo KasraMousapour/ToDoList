@@ -32,7 +32,7 @@ class ProjectService:
         return self.project_repo.update(project_id, **kwargs)
 
     def get_project_with_tasks(self, project_id: int):
-        project = self.project_repo.get(project_id)
+        project = self.project_repo.get_by_id(project_id)
         if not project:
             return None
         tasks = self.task_repo.list_by_project(project_id)

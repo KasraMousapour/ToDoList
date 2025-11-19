@@ -76,7 +76,7 @@ def update_or_remove_project(db, project_id):
     project_service = ProjectService(db)
     task_service = TaskService(db)
 
-    project = project_service.project_repo.get(project_id)
+    project = project_service.project_repo.get_by_id(project_id)
     if not project:
         print("Project not found.")
         return
