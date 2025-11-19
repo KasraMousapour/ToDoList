@@ -27,6 +27,9 @@ class TaskRepository:
 
     def get_by_id(self, task_id: int) -> Task | None:
         return self.db.query(Task).filter(Task.id == task_id).first()
+    
+    def get_by_name(self, task_name: str) -> Task |None:
+        return self.db.query(Task).filter(Task.name == task_name).first()
 
     def list_by_project(self, project_id: int) -> list[Task]:
         return self.db.query(Task).filter(Task.project_id == project_id).all()
