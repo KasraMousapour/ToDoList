@@ -25,14 +25,14 @@ class TaskRepository:
             self.db.rollback()
             raise DuplicateNameError("Task name must be unique within the project") 
 
-    def get(self, task_id: int) -> Task | None:
+    def get_by_id(self, task_id: int) -> Task | None:
         return self.db.query(Task).filter(Task.id == task_id).first()
 
     def list_by_project(self, project_id: int) -> list[Task]:
         return self.db.query(Task).filter(Task.project_id == project_id).all()
 
     def update(self, task_id: int, **kwargs) -> Task | None:
-        task = self.get(task_id)
+        task = self.get_by_id(task_id)
         if not task:
             return None
         for key, value in kwargs.items():
@@ -46,7 +46,7 @@ class TaskRepository:
             raise DuplicateNameError("Task name must be unique within the project")
 
     def delete(self, task_id: int) -> bool:
-        task = self.get(task_id)
+        task = self.get_by_id(task_id)
         if not task:
             return False
         self.db.delete(task)

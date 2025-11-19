@@ -31,7 +31,7 @@ class TaskService:
         return self.task_repo.create(project_id, name, description, status, deadline)
 
     def update_task(self, task_id: int, **kwargs):
-        task = self.task_repo.get(task_id)
+        task = self.task_repo.get_by_id(task_id)
         if not task:
             return None
 

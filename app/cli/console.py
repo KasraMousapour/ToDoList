@@ -103,7 +103,7 @@ def update_or_remove_project(db, project_id):
         tasks = list_tasks(db, project.id)
         if tasks:
             task_id = int(input("Enter task ID to update/remove: "))
-            task = task_service.task_repo.get(task_id)
+            task = task_service.task_repo.get_by_id(task_id)
             if not task:
                 print("Task not found.")
                 return
