@@ -24,12 +24,16 @@ def list_tasks(db, project_id, project_name):
     tasks = task_service.task_repo.list_by_project(project_id)
     print(f"\n=== Tasks for Project {project_name} ===")
     for t in tasks:
-        print(f"{t.name}: (status={t.status.name}, deadline={t.deadline}, closed_at={t.closed_at})")
+        if t.status.name == "done":
+            print(f"{t.name}: (status={t.status.name}, deadline={t.deadline}, closed_at={t.closed_at})")
+        else:
+            print(f"{t.name}: (status={t.status.name}, deadline={t.deadline})")
+
     return tasks
 
 def add_project_and_tasks(db):
     project_service = ProjectService(db)
-    task_service = TaskService(db)
+    
 
     print("\n=== Add New Project ===")
 
@@ -45,37 +49,39 @@ def add_project_and_tasks(db):
             print(f"[ERROR] Project creation failed: {e}")
 
     while True:
-        while True:
-            print("\n=== Add Task ===")
-            tname = input("Task name: ")
-            tdesc = input("Task description: ")
-            status_input = input("Task status (todo/doing/done) [default=todo]: ") or "todo"
-            deadline_input = input("Deadline (YYYY-MM-DD) [optional]: ")
-
-            deadline = None
-            if deadline_input:
-                try:
-                    deadline = datetime.strptime(deadline_input, "%Y-%m-%d")
-                except ValueError:
-                    print("[ERROR] Invalid deadline format, skipping deadline.")
-
-
-            try:
-                task = task_service.create_task(
-                    project_id=project.id,
-                    name=tname,
-                    description=tdesc,
-                    status=TaskStatus[status_input],
-                    deadline=deadline
-                )
-                print(f"[OK] Task created: {task.name}")
-                break
-            except (ValidationError, DuplicateNameError, LimitExceededError, DeadlineError) as e:
-                print(f"[ERROR] Task creation failed: {e}")
-
+        add_tasks(db,project.id)
+        
         more = input("Add another task? (y/n): ").lower()
         if more != "y":
             break
+
+def add_tasks(db, project_id):
+    task_service = TaskService(db)
+
+    while True:
+        print("\n=== Add Task ===")
+        tname = input("Task name: ")
+        tdesc = input("Task description: ")
+        status_input = input("Task status (todo/doing/done) [default=todo]: ") or "todo"
+        deadline_input = input("Deadline (YYYY-MM-DD) [optional]: ")
+        deadline = None
+        if deadline_input:
+            try:
+                deadline = datetime.strptime(deadline_input, "%Y-%m-%d")
+            except ValueError:
+                print("[ERROR] Invalid deadline format, skipping deadline.")
+        try:
+            task = task_service.create_task(
+                project_id=project_id,
+                name=tname,
+                description=tdesc,
+                status=TaskStatus[status_input],
+                deadline=deadline
+            )
+            print(f"[OK] Task created: {task.name}")
+            break
+        except (ValidationError, DuplicateNameError, LimitExceededError, DeadlineError) as e:
+            print(f"[ERROR] Task creation failed: {e}")
 
 def update_or_remove_project(db, project_name):
     project_service = ProjectService(db)
@@ -108,9 +114,12 @@ def update_or_remove_project(db, project_name):
             else:
                 break        
 
-        # Update tasks
         tasks = list_tasks(db, project.id, project.name)
-        if tasks:
+
+        choice_2 = input("Do you want to update (u) existing task or add (a) new task? ").lower()
+
+        # Update tasks
+        if choice_2 == "u":
             task_name = input("Enter task name to update/remove: ")
             task = task_service.task_repo.get_by_name(task_name)
             if not task:
@@ -147,6 +156,8 @@ def update_or_remove_project(db, project_name):
             elif action == "r":
                 task_service.delete_task(task.id)
                 print(f"[OK] Task {task_name} removed.")
+        elif choice_2 == "a":
+            add_tasks(db, project.id)        
 
     elif choice == "r":
         project_service.delete_project(project.id)
