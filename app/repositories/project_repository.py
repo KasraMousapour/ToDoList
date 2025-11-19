@@ -21,6 +21,9 @@ class ProjectRepository:
 
     def get_by_id(self, project_id: int) -> Project | None:
         return self.db.query(Project).filter(Project.id == project_id).first()
+    
+    def get_by_name(self, project_name:str) -> Project | None:
+        return self.db.query(Project).filter(Project.name == project_name).first()
 
     def list(self) -> list[Project]:
         return self.db.query(Project).all()
