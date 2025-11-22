@@ -38,6 +38,18 @@ def update_task(task_id: int, data: TaskUpdateRequest, db: Session = Depends(get
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
+@router.patch("/{task_id}", response_model=TaskResponse)
+async def patch_task(task_id: int, data: TaskUpdateRequest, db: Session = Depends(get_db)):
+    """
+    Partially update a task. Only provided fields will be updated.
+    """
+    service = TaskService(db)
+    update_data = data.dict(exclude_unset=True)  # only fields sent by client
+    task = service.update_task(task_id, **update_data)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
 @router.delete("/{task_id}")
 def delete_task(task_id: int, db: Session = Depends(get_db)):
     service = TaskService(db)

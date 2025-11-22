@@ -31,6 +31,18 @@ def update_project(project_id: int, data: ProjectUpdateRequest, db: Session = De
         raise HTTPException(status_code=404, detail="Project not found")
     return project
 
+@router.patch("/{project_id}", response_model=ProjectResponse)
+def patch_project(project_id: int, data: ProjectUpdateRequest, db: Session = Depends(get_db)):
+    """
+    Partially update a project. Only provided fields will be updated.
+    """
+    service = ProjectService(db)
+    update_data = data.dict(exclude_unset=True)  # only fields sent by client
+    project = service.update_project(project_id, **update_data)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return project
+
 @router.delete("/{project_id}")
 def delete_project(project_id: int, db: Session = Depends(get_db)):
     service = ProjectService(db)
