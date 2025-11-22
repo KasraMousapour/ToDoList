@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from db.session import get_db
 from services.task_services import TaskService
@@ -29,6 +29,17 @@ def create_task(data: TaskCreateRequest, db: Session = Depends(get_db)):
 def list_tasks(project_id: int, db: Session = Depends(get_db)):
     service = TaskService(db)
     return service.list_tasks_for_project(project_id)
+
+@router.get("/by-name", response_model=TaskResponse, summary="Get task by name", description="Retrieve a single task using its name.")
+def get_task_by_name(
+    name: str = Query(..., description="Name of the task"),
+    db: Session = Depends(get_db)
+):
+    service = TaskService(db)
+    task = service.task_repo.get_by_name(name)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
 
 @router.put("/{task_id}", response_model=TaskResponse)
 def update_task(task_id: int, data: TaskUpdateRequest, db: Session = Depends(get_db)):

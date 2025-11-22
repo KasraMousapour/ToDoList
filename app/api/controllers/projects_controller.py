@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from db.session import get_db
 from services.project_services import ProjectService
@@ -22,6 +22,17 @@ def create_project(data: ProjectCreateRequest, db: Session = Depends(get_db)):
 def list_projects(db: Session = Depends(get_db)):
     service = ProjectService(db)
     return service.project_repo.list()
+
+@router.get("/by-name", response_model=ProjectResponse, summary="Get project by name", description="Retrieve a single project using its name.")
+def get_project_by_name(
+    name: str = Query(..., description="Name of the project"),
+    db: Session = Depends(get_db)
+):
+    service = ProjectService(db)
+    project = service.project_repo.get_by_name(name)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return project
 
 @router.put("/{project_id}", response_model=ProjectResponse)
 def update_project(project_id: int, data: ProjectUpdateRequest, db: Session = Depends(get_db)):
