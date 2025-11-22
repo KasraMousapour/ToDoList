@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from db.session import get_db
 from services.task_services import TaskService
 from models.task import TaskStatus
-from api.controllers_schema.requests.tasks_request_schema import TaskCreateRequest, TaskUpdateRequest
-from api.controllers_schema.responses.tasks_responses_schema import TaskResponse
+from api.controllers_schema import TaskCreateRequest, TaskUpdateRequest
+from api.controllers_schema import TaskResponse
 from exceptions.repository_exceptions import DuplicateNameError
 from exceptions.service_exceptions import ValidationError, LimitExceededError, DeadlineError
 

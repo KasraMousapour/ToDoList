@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.session import get_db
 from services.project_services import ProjectService
-from api.controllers_schema.requests.projects_request_schema import ProjectCreateRequest, ProjectUpdateRequest
-from api.controllers_schema.responses.projects_responses_schema import ProjectResponse
+from api.controllers_schema import ProjectCreateRequest, ProjectUpdateRequest
+from api.controllers_schema import ProjectResponse
 from exceptions.repository_exceptions import DuplicateNameError
 from exceptions.service_exceptions import ValidationError, LimitExceededError
 
