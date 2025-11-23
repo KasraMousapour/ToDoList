@@ -180,7 +180,8 @@ def interactive_cli():
         db.close()
 
 def main():
-    parser = argparse.ArgumentParser(description="Interactive CLI for projects and tasks")
+    parser = argparse.ArgumentParser(description="⚠️ Deprecated CLI for project/task management. Use FastAPI instead.")
+    
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     subparsers.add_parser("interactive", help="Run interactive mode to manage projects and tasks")
@@ -188,6 +189,8 @@ def main():
     args = parser.parse_args()
 
     if args.command == "interactive":
+        print("⚠️WARNING: CLI interface is deprecated and will be removed in the next release." \
+        "Please use FastAPI HTTP interface instead.")
         interactive_cli()
     else:
         parser.print_help()
